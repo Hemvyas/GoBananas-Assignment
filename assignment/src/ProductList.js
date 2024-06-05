@@ -18,6 +18,8 @@ import {
   Snackbar,
   CircularProgress,
 } from "@mui/material";
+import _debounce from "lodash/debounce";
+
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -45,13 +47,22 @@ const ProductList = () => {
     getProducts();
   }, []);
 
-  useEffect(() => {
-    setFilteredProducts(
-      products.filter((product) =>
-        product.title.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [searchTerm, products]);
+
+  useEffect(()=>{
+    const debounceSearch=_debounce((value)=>{
+      const filteredData = products.filter((product) =>
+        product.title.toLowerCase().includes(value.toLowerCase())
+      );
+        setFilteredProducts(filteredData);
+    },300)
+    debounceSearch(searchTerm);
+    return ()=>{
+      debounceSearch.cancel();
+    }
+  },[searchTerm,products]);
+
+
+
 
     const handleSnackbarClose = () => {
       setError(null);
