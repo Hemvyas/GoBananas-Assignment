@@ -38,7 +38,6 @@ const ProductList = () => {
         setLoading(true);
         const data = await fetchProducts();
         setProducts(data);
-        setFilteredProducts(data);
         setLoading(false);
       } catch (error) {
         // Set error state if fetching data fails
