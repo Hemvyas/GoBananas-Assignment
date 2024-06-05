@@ -1,10 +1,15 @@
+import { Container, Typography } from '@mui/material';
 import './App.css';
+import ProductList from './ProductList';
 
 function App() {
   return (
-    <div className="App">
-     
-    </div>
+    <Container>
+      <Typography variant='h2' align='center' gutterBottom>
+        Store
+      </Typography>
+      <ProductList/>
+    </Container>
   );
 }
 
