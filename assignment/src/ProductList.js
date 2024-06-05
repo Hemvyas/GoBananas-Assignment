@@ -71,9 +71,19 @@ const ProductList = () => {
     <Container
       style={{
         padding: theme.spacing(2),
+        fontFamily: "serif",
       }}
     >
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        style={{
+          marginBottom: theme.spacing(2),
+          fontWeight: 700,
+          fontSize: "2rem",
+        }}
+      >
         Store Products
       </Typography>
       <TextField
@@ -113,16 +123,24 @@ const ProductList = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Image</TableCell>
-                <TableCell>Title</TableCell>
-                {!isSmallScreen && <TableCell>Description</TableCell>}
-                <TableCell>Price</TableCell>
+                <TableCell style={{ fontWeight: "700" }}>Image</TableCell>
+                <TableCell style={{ fontWeight: "700" }}>Title</TableCell>
+                {!isSmallScreen && (
+                  <TableCell style={{ fontWeight: "700" }}>
+                    Description
+                  </TableCell>
+                )}
+                <TableCell style={{ fontWeight: "700" }}>Price</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell style={{ padding: theme.spacing(1) }}>
+                  <TableCell
+                    style={{
+                      padding: theme.spacing(1),
+                    }}
+                  >
                     <img
                       src={product.image}
                       alt={product.title}
@@ -136,7 +154,14 @@ const ProductList = () => {
                     {product.title}
                   </TableCell>
                   {!isSmallScreen && (
-                    <TableCell>{product.description}</TableCell>
+                    <TableCell
+                      style={{
+                        padding: theme.spacing(1),
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {product.description}
+                    </TableCell>
                   )}
                   <TableCell style={{ padding: theme.spacing(1) }}>
                     ${product.price}
