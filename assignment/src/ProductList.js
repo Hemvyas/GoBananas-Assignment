@@ -57,12 +57,12 @@ const ProductList = () => {
       setFilteredProducts(filteredData);
     }, 300);
     debounceSearch(searchTerm);
+    // Cleanup function to cancel debounce timer
     return () => {
       debounceSearch.cancel();
     };
   }, [searchTerm, products]);
 
-  // Cleanup function to cancel debounce timer
   const handleSnackbarClose = () => {
     setError(null);
   };
