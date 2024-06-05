@@ -25,21 +25,23 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading,setLoading]=useState(false);
-  const [error,setError]=useState(null)
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+// styling and  making responsive
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
+    // Fetch products from the API when the component mounts
     const getProducts = async () => {
       try {
-       setLoading(true);
-       const data = await fetchProducts();
-       setProducts(data);
-       setFilteredProducts(data); 
-       setLoading(false);
+        setLoading(true);
+        const data = await fetchProducts();
+        setProducts(data);
+        setFilteredProducts(data);
+        setLoading(false);
       } catch (error) {
+        // Set error state if fetching data fails
         setError(error.message);
         setLoading(false);
       }
@@ -47,26 +49,24 @@ const ProductList = () => {
     getProducts();
   }, []);
 
-
-  useEffect(()=>{
-    const debounceSearch=_debounce((value)=>{
+  useEffect(() => {
+    // Debounce the search functionality to improve performance
+    const debounceSearch = _debounce((value) => {
       const filteredData = products.filter((product) =>
         product.title.toLowerCase().includes(value.toLowerCase())
       );
-        setFilteredProducts(filteredData);
-    },300)
+      setFilteredProducts(filteredData);
+    }, 300);
     debounceSearch(searchTerm);
-    return ()=>{
+    return () => {
       debounceSearch.cancel();
-    }
-  },[searchTerm,products]);
-
-
-
-
-    const handleSnackbarClose = () => {
-      setError(null);
     };
+  }, [searchTerm, products]);
+
+  // Cleanup function to cancel debounce timer
+  const handleSnackbarClose = () => {
+    setError(null);
+  };
 
   return (
     <Container
@@ -87,6 +87,7 @@ const ProductList = () => {
         style={{ marginBottom: theme.spacing(2) }}
       />
       {loading ? (
+        // Display CircularProgress while loading
         <div style={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
         </div>
@@ -101,6 +102,7 @@ const ProductList = () => {
           </Alert>
         </Snackbar>
       ) : (
+        //Display the fetched data in a table using Material-UI Components
         <TableContainer
           component={Paper}
           style={{
