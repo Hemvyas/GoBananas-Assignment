@@ -1,55 +1,101 @@
-import React, { useEffect, useState } from 'react'
-import { fetchProducts } from './api'
-import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography} from "@mui/material";
+// src/components/ProductList.js
+import React, { useEffect, useState } from "react";
+import { fetchProducts } from "./api";
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 
 const ProductList = () => {
-    const [products,setProducts]=useState([]);
-    const [filteredproducts,setFilteredProducts]=useState([]);
-    const [serachQuery,setSearchQuery]=useState("")
-    useEffect(()=>{
-        const getProducts=async()=>{
-            const data= await fetchProducts();
-            console.log(data); 
-            setProducts(data);
-        }
-        getProducts();
-    },[]);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
-    useEffect(()=>{
-        setFilteredProducts(
-            products.filter(product=>
-                product.title.toLowerCase().includes(serachQuery.toLowerCase())
-            )
-        )
-    },[serachQuery,products])
-  
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const data = await fetchProducts();
+      setProducts(data);
+      setFilteredProducts(data);
+    };
+    getProducts();
+  }, []);
+
+  useEffect(() => {
+    setFilteredProducts(
+      products.filter((product) =>
+        product.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, products]);
 
   return (
-    <Container>
+    <Container
+      style={{
+        padding: theme.spacing(2),
+      }}
+    >
+      <Typography variant="h4" align="center" gutterBottom>
+        Store Products
+      </Typography>
       <TextField
         label="Search Products"
         variant="outlined"
         fullWidth
-        value={serachQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        margin="normal"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ marginBottom: theme.spacing(2) }}
       />
-      <TableContainer>
+      <TableContainer
+        component={Paper}
+        style={{
+          marginTop: theme.spacing(2),
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: "8px",
+        }}
+      >
         <Table>
           <TableHead>
-            <TableCell>Image</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Price</TableCell>
+            <TableRow>
+              <TableCell>Image</TableCell>
+              <TableCell>Title</TableCell>
+              {!isSmallScreen && <TableCell>Description</TableCell>}
+              <TableCell>Price</TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
-            {filteredproducts.map((product) => (
-              <TableRow>
-                <TableCell>
-                  <img src={product.image} alt={product.title} style={{width:100,height:100}}/>
+            {filteredProducts.map((product) => (
+              <TableRow key={product.id}>
+                <TableCell style={{ padding: theme.spacing(1) }}>
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    style={{
+                      width: isSmallScreen ? 30 : 50,
+                      height: isSmallScreen ? 30 : 50,
+                    }}
+                  />
                 </TableCell>
-                <TableCell>{product.title}</TableCell>
-                <TableCell>{product.description}</TableCell>
-                <TableCell>{product.price}</TableCell>
+                <TableCell style={{ padding: theme.spacing(1) }}>
+                  {product.title}
+                </TableCell>
+                {!isSmallScreen && <TableCell>{product.description}</TableCell>}
+                <TableCell style={{ padding: theme.spacing(1) }}>
+                  ${product.price}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -57,6 +103,6 @@ const ProductList = () => {
       </TableContainer>
     </Container>
   );
-}
+};
 
-export default ProductList
+export default ProductList;
